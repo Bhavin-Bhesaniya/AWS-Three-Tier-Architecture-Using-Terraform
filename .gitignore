@@ -1,0 +1,7 @@
+EC2-Three-Tier-Key-Pair.pem
+Three-Tier-VPC-Role_accessKeys.csv
+terraform/.terraform
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+ThreeTier.excalidraw
