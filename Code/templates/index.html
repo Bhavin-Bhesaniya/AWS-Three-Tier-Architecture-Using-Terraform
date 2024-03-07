@@ -2,17 +2,126 @@
 <html>
 <head>
     <title>CRUD Application</title>
+    <script>
+        function createTable() {
+        fetch('/create_table', {
+            method: 'POST',
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+        });
+    }
+
+        function loadData() {
+            fetch('/data')
+            .then(response => response.json())
+            .then(data => {
+                const dataList = document.getElementById('dataList');
+                dataList.innerHTML = '';
+                data.forEach(record => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `ID: ${record.id}, Username: ${record.username}, Email: ${record.email}`;
+                    dataList.appendChild(listItem);
+                });
+            });
+        }
+
+        function createRecord() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            fetch('/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'username': username, 'email': email, 'password': password }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                loadData();
+            });
+        }
+
+        function updateRecord() {
+            const id = document.getElementById('updateId').value;
+            const username = document.getElementById('updateUsername').value;
+            const email = document.getElementById('updateEmail').value;
+            const password = document.getElementById('updatePassword').value;
+            fetch('/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'id': id, 'username': username, 'email': email, 'password': password }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                loadData();
+            });
+        }
+
+        function deleteRecord() {
+            const id = document.getElementById('deleteId').value;
+            fetch('/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 'id': id }),
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                loadData();
+            });
+        }
+
+        // Load initial data when the page is loaded
+        window.onload = loadData;
+    </script>
 </head>
 <body>
     <h1>CRUD Application</h1>
-    <form action="/process" method="post">
+
+    <h2>Setup</h2>
+    <button onclick="createTable()">Create Table</button>
+
+    <h2>Create Record</h2>
+    <form id="createForm">
         <label for="username">Username:</label><br>
         <input type="text" id="username" name="username" required><br>
         <label for="email">Email:</label><br>
         <input type="email" id="email" name="email" required><br>
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password" required><br>
-        <input type="submit" value="Submit">
+        <input type="button" value="Create Record" onclick="createRecord()">
     </form>
+
+    <h2>Update Record</h2>
+    <form id="updateForm">
+        <label for="updateId">ID:</label><br>
+        <input type="text" id="updateId" name="updateId" required><br>
+        <label for="updateUsername">Username:</label><br>
+        <input type="text" id="updateUsername" name="updateUsername" required><br>
+        <label for="updateEmail">Email:</label><br>
+        <input type="email" id="updateEmail" name="updateEmail" required><br>
+        <label for="updatePassword">Password:</label><br>
+        <input type="password" id="updatePassword" name="updatePassword" required><br>
+        <input type="button" value="Update Record" onclick="updateRecord()">
+    </form>
+
+    <h2>Delete Record</h2>
+    <form id="deleteForm">
+        <label for="deleteId">ID:</label><br>
+        <input type="text" id="deleteId" name="deleteId" required><br>
+        <input type="button" value="Delete Record" onclick="deleteRecord()">
+    </form>
+
+    <h2>View Data</h2>
+    <ul id="dataList"></ul>
 </body>
 </html>

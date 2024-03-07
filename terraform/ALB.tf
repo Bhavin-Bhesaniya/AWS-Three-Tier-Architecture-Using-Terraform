@@ -33,7 +33,8 @@ resource "aws_lb_target_group" "alb_lb_target_group" {
 resource "aws_lb_target_group_attachment" "web-attachment" {
   target_group_arn = aws_lb_target_group.alb_lb_target_group.arn
   # target_id        = aws_instance.Public_Web_Instance.id
-  target_id        = aws_autoscaling_group.asg-1.id
+  target_id        = aws_instnance.web-scaling-template.id
+  
   port             = 80
 }
 

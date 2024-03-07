@@ -1,18 +1,18 @@
 # # # # # # # # # # # # #
 # EC2 Instance Web Tier #
 # # # # # # # # # # # # #
-# resource "aws_instance" "Public_Web_Instance" {
-#   ami           = var.image_id
-#   instance_type = var.instanance_type
-#   subnet_id              = aws_subnet.subnets[0].id
-#   vpc_security_group_ids = [aws_security_group.webserver_security_group.id]
-#   key_name               = var.ec2_key_name
-#   user_data              = base64encode(file("install-webtier.sh"))
+resource "aws_instance" "Public_Web_Instance" {
+  ami           = var.image_id
+  instance_type = var.instanance_type
+  subnet_id              = aws_subnet.subnets[0].id
+  vpc_security_group_ids = [aws_security_group.webserver_security_group.id]
+  key_name               = var.ec2_key_name
+  user_data              = base64encode(file("scripts/install-webtier.sh"))
 
-#   tags = {
-#     Name = "web-asg"
-#   }
-# }
+  tags = {
+    Name = "web-asg"
+  }
+}
 
 
 # # # # # # # # # # # # #
@@ -41,7 +41,7 @@ resource "aws_launch_template" "web-scaling-template" {
   image_id      = var.image_id
   instance_type = var.instanance_type
   key_name      = var.ec2_key_name
-  user_data     = base64encode(file("install-webtier.sh"))
+  user_data     = base64encode(file("scripts/install-webtier.sh"))
 
   network_interfaces {
     subnet_id       = aws_subnet.subnets[0].id
@@ -78,7 +78,7 @@ resource "aws_launch_template" "app-scaling-template" {
   image_id      = var.image_id
   instance_type = var.instanance_type
   key_name      = var.ec2_key_name
-  user_data     = base64encode(file("install-apptier.sh"))
+  user_data     = base64encode(file("scripts/install-apptier.sh"))
 
   network_interfaces {
     subnet_id       = aws_subnet.subnets[2].id
